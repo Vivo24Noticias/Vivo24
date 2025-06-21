@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Sismos 24 Horas - Dashboard Digital Moderno</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Fuente -->
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="asset/css/monstyle.css" />
+
+  <!-- Chart.js para gráficos -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div id="splash-screen">
+    <h1>Monitoreo Sismo 24h</h1>
+    <p>Cargando datos en tiempo real...</p>
+  </div>
+
+  <!-- Navegación -->
+  <header style="
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(90deg, #000000, #06768a);
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+    user-select: none;
+    z-index: 1030;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+  ">
+    <!-- Título centrado -->
+    <div style="
+      position: absolute; 
+      left: 50%; 
+      transform: translateX(-50%); 
+      width: max-content;
+      pointer-events: none; /* para evitar interferir con el botón */
+    ">
+      MONITOREO24® | SISMO
+    </div>
+
+    <!-- Botón menú hamburguesa -->
+    <button id="menu-button" aria-label="Abrir menú" 
+            style="
+              margin-left: auto; 
+              background: transparent; 
+              border: none; 
+              color: white; 
+              font-size: 1.8rem; 
+              cursor: pointer;
+              z-index: 1040; /* encima del título */
+            ">
+      &#9776;
+    </button>
+
+    <!-- Menú desplegable -->
+    <nav id="menu" 
+         style="
+           position: fixed; 
+           top: 60px; 
+           right: 10px; 
+           background: #000000; 
+           border-radius: 8px; 
+           box-shadow: 0 0 8px rgba(29,161,242,0.7); 
+           display: none; 
+           min-width: 160px; 
+           z-index: 1050;
+         ">
+      <ul style="
+        list-style: none; 
+        padding: 10px 0; 
+        margin: 0;
+      ">
+        <li><a href="index.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">VIVO24</a></li>
+        <li><a href="chilesismo.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Monitoreo Sismos En Chile</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Contenedor principal -->
+  <div class="container-fluid">
+
+    <!-- Panel izquierdo -->
+    <section class="left-panel">
+      <p id="last-update"></p>
+      <div id="timer">Segundos desde última actualización: 0s</div>
+      <p>Dashboard Monitoreo Sísmico 24h</p>
+      <p>Alarma de Sonido Activadas</p>
+      <div>Hora en Chile (GMT-4)</div>
+      <br />
+
+      <!-- 🔽 Contenedor responsive de tabla -->
+      <div id="tabla-wrapper">
+        <div id="earthquakes-table"></div> <!-- Aquí se carga dinámicamente la tabla vía JS -->
+      </div>
+    </section>
+
+
+    
+
+    <!-- Panel derecho -->
+    <section class="right-panel">
+
+      <!-- Sismo Top 1 -->
+      <div id="top1-quake-alert" style="display: none; background: #220000; border: 2px solid #ff4444; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 0 15px #ff3333 inset, 0 0 25px #ff0000;">
+        <div style="text-align: center; font-weight: 900; color: #ff6666; font-size: 1.2rem; text-shadow: 0 0 10px #ff0000;">Máx Magnitud 24h</div>
+        <div id="top1-quake-content" style="color: #ffaaaa; margin-top: 0.5rem;"></div>
+        <div id="top1-map-container" style="margin-top: 1rem; height: 220px;"></div>
+      </div>
+
+      <!-- Último sismo -->
+      <div id="earthquake-alert" style="display: none;">
+        <div><strong>Último Sismo</strong></div>
+        <div id="alert-content"></div>
+        <div id="map-container" style="margin-top: 1rem; height: 220px;"></div>
+      </div>
+
+      <!-- Otros elementos -->
+      <div id="top-quakes"></div>
+      <div id="probabilidad-container"></div>
+      <div id="zona-caliente">Zona caliente de sismo fuerte</div>
+
+      <!-- Noticias RSS -->
+      <h3 style="text-align: center; margin-bottom: 0.5rem; color: #00e6f6;">Últimas Noticias de Sismos en el Mundo</h3>
+      <div id="rss-news" style="max-height: 300px; overflow-y: auto; border: 1px solid #00e6f6; border-radius: 10px; padding: 1rem; background: #002533; box-shadow: 0 0 10px #00e6f6;"></div>
+
+      <!-- Gráfico de sismos -->
+      <canvas id="earthquakeChart" style="width: 100%; height: 280px; margin-top: 1rem;"></canvas>
+    </section>
+  </div>
+
+  <!-- Audio de alerta -->
+  <audio id="alertSound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" preload="auto"></audio>
+
+  <!-- Script principal -->
+  <script src="asset/js/monscript.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+</body>
+</html>

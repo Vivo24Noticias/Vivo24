@@ -1,0 +1,529 @@
+/* -------------------- RESET BÁSICO -------------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* -------------------- ESTILO GLOBAL -------------------- */
+body {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #00e6f6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  user-select: none;
+}
+
+h2 {
+  text-align: center;
+  color: #00f0ff;
+  text-shadow:
+    0 0 10px #00e6f6,
+    0 0 20px #00b8ff,
+    0 0 30px #00aaff,
+    0 0 40px #00aaff;
+  margin-bottom: 1rem;
+}
+
+/* -------------------- NAVEGACIÓN -------------------- */
+nav {
+  background: #05141d;
+  box-shadow: 0 0 20px #00e6f6 inset;
+  padding: 1rem 2rem;
+}
+
+/* -------------------- LAYOUT PRINCIPAL -------------------- */
+.container-fluid {
+  flex: 1;
+  display: flex;
+  padding: 3rem 2rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 70px; /* despega el contenido del top */
+}
+
+/* Paneles laterales */
+.left-panel, .right-panel {
+  background: rgba(0, 30, 50, 0.6);
+  border: 1px solid #00e6f6;
+  border-radius: 12px;
+  box-shadow:
+    0 0 15px #00e6f6,
+    inset 0 0 20px #00f0ff;
+  padding: 1.5rem 2rem;
+  flex-grow: 1;
+  min-width: 320px;
+}
+
+.left-panel {
+  max-width: 65%;
+}
+
+.right-panel {
+  max-width: 33%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* -------------------- ALERTA DE SISMOS -------------------- */
+#earthquake-alert {
+  background: #002533;
+  border: 2px solid #00e6f6;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow:
+    0 0 10px #00e6f6,
+    0 0 20px #00aaff;
+  color: #00f5ff;
+  font-weight: 700;
+  text-align: center;
+  animation: pulseNeon 2.5s ease-in-out infinite;
+}
+
+@keyframes pulseNeon {
+  0%, 100% {
+    box-shadow: 0 0 8px #44baff, 0 0 16px #00b7ff;
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 12px #66edff, 0 0 24px #3392ff;
+    transform: scale(1.01);
+  }
+}
+
+#alert-content {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  letter-spacing: 0.08rem;
+}
+
+/* -------------------- MAPA EMBEBIDO -------------------- */
+#map-container iframe {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 0 15px #00e6f6;
+  filter: drop-shadow(0 0 3px #00d4ff);
+}
+
+/* -------------------- TOP SISMOS -------------------- */
+#top-quakes {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.quake-box {
+  flex: 1;
+  background: #004058;
+  border-radius: 10px;
+  padding: 0.8rem;
+  text-align: center;
+  color: #00e6f6;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 0 8px #00dfff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: default;
+  user-select: none;
+}
+
+.quake-box:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 18px #00ffff, 0 0 40px #00bbff;
+}
+
+/* Colores según magnitud */
+.quake-box.red {
+  background: #330000;
+  box-shadow: 0 0 12px #ff4444;
+  color: #ff6666;
+}
+
+.quake-box.yellow {
+  background: #332a00;
+  box-shadow: 0 0 12px #ffcc00;
+  color: #ffec99;
+}
+
+.quake-box.green {
+  background: #003300;
+  box-shadow: 0 0 12px #66ff66;
+  color: #bbffbb;
+}
+
+/* -------------------- PROBABILIDAD -------------------- */
+#probabilidad-container {
+  background: #001a26;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  color: #00ffcc;
+  font-weight: 700;
+  box-shadow: 0 0 15px #00e6f6 inset;
+  margin-bottom: 1rem;
+}
+
+#probabilidad-container .card-header {
+  font-size: 1.2rem;
+  letter-spacing: 0.12rem;
+  margin-bottom: 0.5rem;
+}
+
+#probabilidad-container h2 {
+  font-size: 3rem;
+  text-shadow:
+    0 0 8px #00e6f6,
+    0 0 18px #00bbff;
+  margin-bottom: 0;
+}
+
+/* -------------------- ZONA CALIENTE -------------------- */
+#zona-caliente {
+  background: #220000;
+  border: 2px solid #ff4444;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-top: 1rem;
+  color: #ff6666;
+  font-weight: 900;
+  text-align: center;
+  text-shadow:
+    0 0 8px #ff4444,
+    0 0 20px #ff2222;
+  box-shadow:
+    0 0 12px #ff5555 inset,
+    0 0 18px #ff3333;
+  user-select: none;
+  display: none; /* Oculto por defecto */
+}
+
+/* -------------------- TABLA DE DATOS -------------------- */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 10px #00e6f6;
+}
+
+thead {
+  background: #005974;
+}
+
+thead th {
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1rem;
+  text-align: left;
+  color: #00e6f6;
+  border-bottom: 2px solid #00b8ff;
+}
+
+tbody tr {
+  background: #003f56;
+  transition: background 0.3s ease;
+}
+
+tbody tr:hover {
+  background: #006488;
+  cursor: pointer;
+}
+
+tbody tr.highlight-last {
+  border: 2px solid #00bfff;
+  box-shadow: 0 0 12px #00bfff inset;
+  background: #002f43 !important;
+  color: #00eaff !important;
+}
+
+tbody td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid #004f70;
+}
+
+tbody td a {
+  color: #00e6f6;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+tbody td a:hover {
+  text-decoration: underline;
+}
+
+/* Colores para distintas intensidades */
+tbody tr.low-mag {
+  background-color: #003300;
+  color: #bbffbb;
+}
+
+tbody tr.mid-mag {
+  background-color: #332a00;
+  color: #ffec99;
+}
+
+tbody tr.high-mag {
+  background-color: #330000;
+  color: #ff6666;
+}
+
+/* -------------------- ÚLTIMA ACTUALIZACIÓN Y TEMPORIZADOR -------------------- */
+#last-update {
+  text-align: right;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+  color: #0099bb;
+  letter-spacing: 0.1rem;
+}
+
+#timer {
+  text-align: right;
+  font-size: 0.8rem;
+  color: #00bbdd;
+  margin-top: 0.25rem;
+  letter-spacing: 0.1rem;
+}
+
+/* -------------------- RESPONSIVE DESIGN -------------------- */
+@media (max-width: 992px) {
+  .container-fluid {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .left-panel, .right-panel {
+    max-width: 100%;
+    flex-grow: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  #top-quakes {
+    flex-direction: column;
+  }
+
+  .quake-box {
+    width: 100%;
+    margin-bottom: 0.6rem;
+  }
+}
+
+/* -------------------- EFECTO PULSO PARA ALERTA DESTACADA -------------------- */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 15px #ff3333 inset, 0 0 25px #ff0000, 0 0 5px #ff0000;
+    transform: scale(1);
+  }
+  10% {
+    box-shadow: 0 0 25px #ff5555 inset, 0 0 40px #ff2222, 0 0 15px #ff4444;
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 15px #ff3333 inset, 0 0 25px #ff0000, 0 0 5px #ff0000;
+    transform: scale(1);
+  }
+}
+
+#top1-quake-alert {
+  animation: pulse 2s infinite;
+}
+
+
+/* RESPONSIVE GENERAL */
+
+/* TABLET Y MÓVIL PEQUEÑO */
+@media (max-width: 992px) {
+  .container-fluid {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .left-panel, .right-panel {
+    max-width: 100%;
+    flex-grow: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  #top-quakes {
+    flex-direction: column;
+  }
+
+  .quake-box {
+    width: 100%;
+    margin-bottom: 0.6rem;
+  }
+
+  table {
+    font-size: 0.9rem;
+    overflow-x: auto;
+    display: block;
+  }
+}
+
+/* TELÉFONOS MÁS PEQUEÑOS (como 480px o menos) */
+@media (max-width: 576px) {
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  .quake-box {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+
+  #probabilidad-container h2 {
+    font-size: 2rem;
+  }
+
+  nav {
+    padding: 0.8rem;
+  }
+
+  .container-fluid {
+    padding: 0.5rem;
+  }
+
+  #earthquake-alert {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+
+  #alert-content {
+    font-size: 1rem;
+  }
+
+  #map-container iframe {
+    width: 100%;
+    height: 300px;
+  }
+}
+/* Organización de orden en móvil */
+@media (max-width: 992px) {
+  .container-fluid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .left-panel {
+    order: 1;
+  }
+
+  .right-panel {
+    order: 2;
+  }
+
+  #tabla-wrapper {
+    order: 3;
+  }
+}
+
+@media (max-width: 768px) {
+  #tabla-wrapper {
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  table {
+    min-width: 600px;
+    font-size: 0.85rem;
+    display: block;
+  }
+
+  thead th,
+  tbody td {
+    padding: 0.5rem;
+  }
+}
+
+/* Ajuste de tamaño para mapas en móviles */
+@media (max-width: 768px) {
+  #map-container,
+  #top1-map-container {
+    height: 180px !important;
+  }
+
+  #map-container iframe,
+  #top1-map-container iframe {
+    height: 180px !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #map-container,
+  #top1-map-container {
+    height: 150px !important;
+  }
+
+  #map-container iframe,
+  #top1-map-container iframe {
+    height: 150px !important;
+    width: 100% !important;
+  }
+}
+/* En móviles, mostrar primero el panel derecho */
+@media (max-width: 992px) {
+  .container-fluid {
+    flex-direction: column;
+  }
+
+  .right-panel {
+    order: 1;
+  }
+
+  .left-panel {
+    order: 2;
+  }
+}
+
+/* -------------------- SPLASH SCREEN -------------------- */
+#splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #00e6f6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  font-family: 'Share Tech Mono', monospace;
+  text-align: center;
+  animation: fadeOut 1s ease-in-out forwards;
+  animation-delay: 2.8s;
+}
+
+#splash-screen h1 {
+  font-size: 2.5rem;
+  text-shadow: 0 0 10px #00e6f6, 0 0 20px #00b8ff;
+  margin-bottom: 1rem;
+}
+
+#splash-screen p {
+  font-size: 1.2rem;
+  text-shadow: 0 0 5px #00b8ff;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+/* Splash screen en pantallas pequeñas */
+@media (max-width: 576px) {
+  #splash-screen h1 {
+    font-size: 1.5rem;
+  }
+
+  #splash-screen p {
+    font-size: 1rem;
+  }
+}
