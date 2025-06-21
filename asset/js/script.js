@@ -133,9 +133,16 @@ async function cargarNoticias(apiUrl, contenedorId, limit = 10) {
     // Guardar noticias según el contenedor
     if (contenedorId === 'mundo-news') {
       noticiasInternacionales = noticiasRecientes.slice(0, limit);
+
+
     } else if (contenedorId === 'chile-news') {
       noticiasChile = noticiasRecientes.slice(0, limit);
     }
+
+    if (contenedorId === 'chile-news' && noticiasChile.length > 0) {
+  const noticia = noticiasChile[0];
+  mostrarAlertaNoticia(noticia.title, noticia.url || noticia.link);
+}
 
     // Mostrar noticias en el contenedor
     for (let i = 0; i < Math.min(limit, noticiasRecientes.length); i++) {
@@ -505,6 +512,13 @@ async function cargarNoticiasMultiples(apiUrls, contenedorId, limit = 10) {
   // Ordenar todas las noticias por fecha descendente
   todasLasNoticias.sort((a, b) => new Date(b.publishedAt || b.pubDate) - new Date(a.publishedAt || a.pubDate));
 
+//alertas
+  if (todasLasNoticias.length > 0) {
+  const noticia = todasLasNoticias[0];
+  mostrarAlertaNoticia(noticia.title, noticia.url || noticia.link);
+}
+
+
   // Mostrar noticias (máximo según `limit`)
   for (let i = 0; i < Math.min(limit, todasLasNoticias.length); i++) {
     const item = todasLasNoticias[i];
@@ -526,6 +540,20 @@ async function cargarNoticiasMultiples(apiUrls, contenedorId, limit = 10) {
     `;
     contenedor.appendChild(div);
   }
+}
+
+
+function mostrarAlertaNoticia(titulo, link) {
+  const alerta = document.getElementById('alerta-noticia');
+  if (!alerta) return;
+
+  alerta.innerHTML = `<a href="${link}" target="_blank" style="color:#000; text-decoration:underline;">Urgente Chile: ${titulo}</a>`;
+  alerta.classList.remove('hidden');
+
+  // Ocultar después de 6 segundos
+  setTimeout(() => {
+    alerta.classList.add('hidden');
+  }, 3500);
 }
 
 

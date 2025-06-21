@@ -621,3 +621,30 @@ header {
     box-shadow: none;
     background: #b34200;
   }
+
+.alerta-noticia {
+  position: fixed;
+  top: 56px; /* justo debajo de un nav típico de 56px */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(13, 253, 213, 0.848); /* azul Bootstrap con transparencia */
+  color: white;
+  padding: 12px 24px;
+  border-radius: 0.375rem; /* similar a bootstrap */
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1050; /* encima de nav y contenido */
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  max-width: 90vw;
+  text-align: center;
+}
+
+/* Oculto */
+.alerta-noticia.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
