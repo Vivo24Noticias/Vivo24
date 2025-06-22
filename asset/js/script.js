@@ -11,9 +11,8 @@ document.body.style.overflow = 'hidden';
 
 
 
-
-
-// Datos para clima
+// Datos de clima y api
+// Datos para clima 
 const regiones = [
   "Santiago, Chile",
   "Arica, Chile",
@@ -44,7 +43,6 @@ const traduccionesClima = {
   'Heavy rain': 'Lluvia intensa', 'Showers': 'Chubascos',
   'Thundery outbreaks possible': 'Posibles tormentas', 'Snow': 'Nieve' ,'Rain' : 'Lluvia','Light drizzle and rain' : 'Lluvia ligera y llovizna'
 };
-// api para clima
 async function cargarClima() {
   const contenedor = document.getElementById('weather-container');
   if (!contenedor) return;
@@ -93,92 +91,8 @@ async function cargarClima() {
 
 
 
-// Función para cargar noticias
-let noticiasInternacionales = [];
-let noticiasChile = [];
-async function cargarNoticias(apiUrl, contenedorId, limit = 10) {
-  try {
-    const res = await fetch(apiUrl);
-    const data = await res.json();
-    const contenedor = document.getElementById(contenedorId);
-    if (!contenedor) return;
-    contenedor.innerHTML = '';
-
-    const items = data.articles || data.items || [];
-
-    // Ordenar noticias de más reciente a más antigua
-    items.sort((a, b) => new Date(b.publishedAt || b.pubDate) - new Date(a.publishedAt || a.pubDate));
-
-    if (!items.length) {
-      contenedor.innerHTML = '<p>No hay noticias disponibles.</p>';
-      return;
-    }
-
-    // Obtener fecha actual y hace 2 días
-    const ahora = new Date();
-    const hace2Dias = new Date();
-    hace2Dias.setDate(ahora.getDate() - 2);
-
-    // Filtrar noticias publicadas en los últimos 2 días
-    const noticiasRecientes = items.filter(item => {
-      const fecha = new Date(item.publishedAt || item.pubDate);
-      return fecha >= hace2Dias && fecha <= ahora;
-    });
-
-    if (noticiasRecientes.length === 0) {
-      contenedor.innerHTML = '<p>No hay noticias recientes disponibles.</p>';
-      return;
-    }
-
-    // Guardar noticias según el contenedor
-    if (contenedorId === 'mundo-news') {
-      noticiasInternacionales = noticiasRecientes.slice(0, limit);
 
 
-    } else if (contenedorId === 'chile-news') {
-      noticiasChile = noticiasRecientes.slice(0, limit);
-    }
-
-    if (contenedorId === 'chile-news' && noticiasChile.length > 0) {
-  const noticia = noticiasChile[0];
-  mostrarAlertaNoticia(noticia.title, noticia.url || noticia.link);
-}
-
-    // Mostrar noticias en el contenedor
-    for (let i = 0; i < Math.min(limit, noticiasRecientes.length); i++) {
-      const item = noticiasRecientes[i];
-      const fecha = new Date(item.publishedAt || item.pubDate);
-      const titulo = item.title || 'Sin título';
-      const link = item.url || item.link || '#';
-
-      if (i === 0) {
-        const tituloDiv = document.createElement('h6');
-        tituloDiv.className = 'titulo-ultima-noticia text-center';
-        tituloDiv.textContent = '';
-        contenedor.appendChild(tituloDiv);
-      }
-
-      const div = document.createElement('div');
-      div.className = 'news-item';
-
-      if (i === 0) {
-        div.classList.add('ultima-noticia');
-      }
-
-      div.innerHTML = `
-        <div class="news-title">${titulo}</div>
-        <div class="news-date">${fecha.toLocaleString('es-CL', { hour12: false })}</div>
-        <a href="${link}" target="_blank" class="btn-vermas">Ver más</a>
-        <div class="d-flex justify-content-end"> 
-          <span class="badge rounded-pill text-bg-dark ">VIVO24® | Noticias</span>
-        </div>
-      `;
-      contenedor.appendChild(div);
-    }
-  } catch (e) {
-    console.error('Error cargando noticias:', e);
-  }
-}
 
 
 
@@ -194,7 +108,7 @@ document.querySelectorAll('.scroll-button').forEach(btn => {
 
 
 
-// Contador actualización
+// Contador actualización de pagina
 let tiempoRestante = 60;
 const contador = document.getElementById('contador');
 setInterval(() => {
@@ -257,17 +171,141 @@ async function fetchEarthquakes() {
 
 
 
-// cerebro para chatbot
-const conocimientos = {
 
-  "preguntar":"Este chat te sirve para encontrar las ultima noticias nacionales y internacionales, sismos y clima de hoy en Santiago",
-  "sirve":"Este chat te sirve para encontrar las ultima noticias nacionales y internacionales, sismos y clima de hoy en Santiago",
-  
-  "hola":"Buenos días, desde este chat puede preguntar por la ultimos sismos, noticias y clima"
+
+
+// cerebro para chatbot, 
+const chistes = [
+  "¿Por qué las focas miran siempre hacia arriba? ¡Porque ahí están los focos!",
+  "¿Qué le dijo una cebolla a otra cebolla? ¡Eres la única que me hace llorar!",
+  "¿Cuál es el colmo de un jardinero? Que siempre lo dejen plantado.",
+  "¿Qué hace una abeja en el gimnasio? ¡Zum-ba!",
+  "¿Por qué los pájaros no usan Facebook? ¡Porque ya tienen Twitter!",
+  "¿Qué le dijo una impresora a otra? ¿Esa hoja es tuya o es una impresión mía?",
+  "¿Cómo se despiden los químicos? Ácido un placer.",
+  "¿Qué le dijo un pez a otro pez? ¡Nada, nada!",
+  "¿Cuál es el animal más antiguo? La cebra, porque está en blanco y negro.",
+  "¿Por qué el libro de matemáticas estaba triste? Porque tenía muchos problemas.",
+  "¿Qué le dijo el semáforo al coche? No me mires que me estoy cambiando.",
+  "¿Qué hace una vaca cuando sale el sol? Sombra.",
+  "¿Por qué los esqueletos no pelean entre ellos? Porque no tienen agallas.",
+  "¿Cuál es el colmo de un sastre? Que le queden cortas las ideas.",
+  "¿Qué le dijo un jaguar a otro? Jaguar you!",
+  "¿Cómo se llama el café más peligroso del mundo? Ex-preso.",
+  "¿Por qué los perros no usan reloj? Porque tienen pulgas.",
+  "¿Qué le dijo una iguana a su hermana gemela? Somos iguana-les.",
+  "¿Qué le dijo el cero al ocho? ¡Bonito cinturón!",
+  "¿Por qué los pájaros no usan reloj? Porque vuelan en el tiempo.",
+  "¿Qué le dijo un pez a otro? ¡Tanto tiempo sin verte!",
+  "¿Cuál es el colmo de un electricista? Que le dé miedo la oscuridad.",
+  "¿Qué le dijo la luna al sol? ¡Eres tan brillante!",
+  "¿Qué hace una computadora cuando tiene frío? Se pone un byte.",
+  "¿Por qué las plantas odian las matemáticas? Porque les da raíz cuadrada.",
+  "¿Qué le dijo un árbol a otro? ¡Estamos enraizados en la amistad!",
+  "¿Por qué las tortugas no juegan al fútbol? Porque son unos tortugazos.",
+  "¿Qué le dijo una tortilla a otra tortilla? ¡Eres mi media naranja!",
+  "¿Qué le dijo un teléfono móvil a otro? ¡Tengo batería para rato!",
+  "¿Por qué el mar nunca se seca? Porque tiene una marea de agua.",
+  "¿Qué le dijo un pez payaso a otro? ¡Eres muy divertido!",
+  "¿Por qué el ordenador fue al doctor? Porque tenía un virus.",
+  "¿Qué hace un pez cuando choca? ¡Nada!",
+  "¿Por qué el tomate se puso rojo? Porque vio la ensalada.",
+  "¿Cuál es el colmo de un peluquero? Cortar por lo sano.",
+  "¿Qué le dijo el café al azúcar? Sin ti, soy amargo.",
+  "¿Por qué las vacas usan campana? Porque suena mejor que el móvil.",
+  "¿Qué le dijo un muro a otro? Nos vemos en la esquina.",
+  "¿Qué le dijo un plátano a una gelatina? No tiembles, que soy yo.",
+  "¿Por qué los fantasmas no mienten? Porque se transparentan.",
+  "¿Qué le dijo un zapato a otro? Vamos a dar una vuelta.",
+  "¿Qué le dijo el viento al árbol? ¡Eres muy sensible!",
+  "¿Por qué el reloj está siempre feliz? Porque siempre da la hora.",
+  "¿Qué le dijo un libro a otro? ¡Estoy lleno de historias!",
+  "¿Qué hace un perro con un taladro? Taladrando.",
+  "¿Por qué las arañas son malas para contar chistes? Porque son muy tela.",
+  "¿Qué le dijo el océano a la playa? Nada, solo hizo una ola.",
+  "¿Cuál es el colmo de un electricista? Que le dé miedo la oscuridad.",
+  "¿Por qué el pollo cruzó la carretera? Para llegar al otro lado.",
+  "¿Qué le dijo el pan al horno? ¡No me quemes!",
+  "¿Qué le dijo el pez al mar? Gracias por tu compañía.",
+  "¿Por qué la luna no sale de día? Porque es tímida.",
+  "¿Qué hace una computadora en el gimnasio? Ejecuta programas.",
+  "¿Qué le dijo un globo a otro? ¡Estoy lleno de aire!",
+  "¿Por qué los gatos no hablan? Porque son muy misteriosos.",
+  "¿Qué le dijo la cuchara al tenedor? Somos compañeros de mesa.",
+  "¿Qué hace un pez cuando quiere jugar? Nada.",
+  "¿Cuál es el colmo de un matemático? Perder la cuenta.",
+  "¿Qué le dijo una guitarra a otra? ¡Eres mi nota perfecta!",
+  "¿Por qué las plantas hablan poco? Porque son de hojas calladas.",
+  "¿Qué le dijo un semáforo a otro? No me cambies.",
+  "¿Qué le dijo un camaleón a otro? Cambiemos de color.",
+  "¿Por qué los relojes son malos para correr? Porque siempre se detienen.",
+  "¿Qué le dijo el papel a la tijera? ¡Me cortas el rollo!",
+  "¿Qué le dijo el sol a la luna? Nos vemos en el amanecer.",
+  "¿Por qué las estrellas no hacen ruido? Porque son silenciosas.",
+  "¿Qué le dijo el gato a la gata? Eres muy gatuna.",
+  "¿Qué hace un caracol en una autopista? Va lento pero seguro.",
+  "¿Por qué los peces no usan internet? Porque no tienen red.",
+  "¿Qué le dijo un oso a otro? Estoy oso de frío.",
+  "¿Qué le dijo la nieve al sol? No me derritas.",
+  "¿Por qué las ranas son buenas en matemáticas? Porque saben contar croac.",
+  "¿Qué le dijo un árbol al hacha? No me cortes las ramas.",
+  "¿Qué hace una abeja en el gimnasio? Zum-ba.",
+  "¿Por qué los perros no usan reloj? Porque tienen pulgas.",
+  "¿Qué le dijo el mar a la orilla? Te espero siempre.",
+  "¿Qué le dijo un ratón a un gato? No me comas.",
+  "¿Por qué el cielo es azul? Porque el sol se pone triste.",
+  "¿Qué hace una flor cuando ve al sol? Sonríe.",
+  "¿Por qué las hormigas no se pierden? Porque tienen GPS natural.",
+  "¿Qué le dijo una nube a otra? Vamos a llover juntos.",
+  "¿Por qué el cartero siempre está feliz? Porque entrega buenas noticias.",
+  "¿Qué le dijo un pez a una sirena? Eres mi fantasía.",
+  "¿Por qué las mariposas son tan bonitas? Porque son almas en colores.",
+  "¿Qué le dijo una estrella fugaz a otra? Vamos a brillar juntos.",
+  "¿Por qué las abejas trabajan tanto? Porque la miel no se hace sola.",
+  "¿Qué le dijo un globo terráqueo a otro? Somos el mundo.",
+  "¿Qué hace un oso polar en el desierto? Está perdido.",
+  "¿Por qué los búhos son sabios? Porque escuchan en la oscuridad.",
+  "¿Qué le dijo un tren a otro? Vamos en la misma vía.",
+  "¿Por qué el fuego no puede mentir? Porque siempre arde la verdad.",
+  "¿Qué le dijo un pez globo a otro? No te infles más.",
+  "¿Por qué las serpientes no usan zapatos? Porque tienen pies de serpiente.",
+  "¿Qué le dijo un cangrejo a otro? ¡Vamos para atrás!",
+  "¿Por qué los árboles no usan celulares? Porque prefieren las raíces.",
+  "¿Qué le dijo una vaca a otra? Estoy muuu feliz.",
+  "¿Por qué el elefante nunca usa computadora? Porque le tiene miedo al ratón.",
+  "¿Qué le dijo una guitarra a otra? ¡Tocamos juntos!",
+  "¿Por qué los peces no hablan? Porque están debajo del agua.",
+  "¿Qué le dijo una montaña a otra? ¡Somos grandes amigos!",
+  "¿Por qué los tigres son tan buenos en matemáticas? Porque saben multiplicar.",
+  "¿Qué hace un pulpo con un reloj? Da muchas horas.",
+  "¿Por qué el oso nunca usa sombrero? Porque tiene la cabeza grande.",
+  "¿Qué le dijo una estrella al sol? Brillas mucho.",
+  "¿Por qué los leones no juegan a las cartas? Porque hay muchos tramposos.",
+  "¿Qué le dijo un pato a otro? Estamos en el agua.",
+  "¿Por qué los pájaros no usan paraguas? Porque vuelan sobre la lluvia.",
+  "¿Qué le dijo un caracol a otro? Vamos lento pero seguro."
+];
+let ultimoIndice = -1;
+const conocimientos = {
+  "preguntar": "Este chat te sirve para encontrar las últimas noticias nacionales e internacionales, sismos y clima de hoy en Santiago",
+  "sirve": "Este chat te sirve para encontrar las últimas noticias nacionales e internacionales, sismos y clima de hoy en Santiago",
+  "hola": "Buenos días, desde este chat puede preguntar por los últimos sismos, noticias y clima",
+  "chiste": () => {
+    // Elegir un chiste aleatorio
+     let indice;
+    do {
+      indice = Math.floor(Math.random() * chistes.length);
+    } while (indice === ultimoIndice && chistes.length > 1); // evita repetir el mismo chiste
+
+    ultimoIndice = indice;
+    return chistes[indice];
+  }
 };
+
 // Función para mostrar mensaje inicial
 function mostrarMensajeInicial() {
-  appendMessage("Asistente", "¡Hola! Soy tu asistente. Pregúntame sobre el clima en Santiago, noticias nacionales, noticias internacionales, Ultimo sismos y más.");
+ appendMessage("Asistente", "¡Hola! Soy tu asistente. Escribe lo que quieras saber, por ejemplo: clima en Santiago, noticias , últimos sismos o un chiste.");
+
 }
 // Modifica toggleChat para mostrar el mensaje la primera vez que se abre
 function toggleChat() {
@@ -295,7 +333,7 @@ function appendMessage(author, text) {
 }
 
 // Manejar input usuario y generar respuesta
-function handleUserInput() {
+async function handleUserInput() {
   const inputField = document.getElementById("user-input");
   if (!inputField) return;
   const pregunta = inputField.value.trim().toLowerCase();
@@ -304,12 +342,52 @@ function handleUserInput() {
 
   let respuesta = "No tengo información sobre eso ahora.";
 
-  if (pregunta.includes("clima") || pregunta.includes("tiempo")) {
+  // 🔽 Normalizamos la pregunta sin acentos
+  const preguntaNormalizada = pregunta.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+  if (pregunta.includes("chiste")) {
+    if (typeof conocimientos.chiste === "function") {
+      respuesta = conocimientos.chiste();
+    } else {
+      respuesta = "No tengo chistes disponibles ahora.";
+    }
+  } else if (pregunta.includes("clima") || pregunta.includes("tiempo")) {
     const climaContenedor = document.getElementById("weather-container");
-    const santiagoDiv = climaContenedor
-      ? Array.from(climaContenedor.children).find(div => div.innerHTML.includes("Santiago"))
-      : null;
-    respuesta = santiagoDiv ? santiagoDiv.innerText : "No tengo el clima de Santiago cargado aún.";
+    let regionEncontrada = null;
+
+    // Buscar si alguna región está en la pregunta
+    for (const region of regiones) {
+      const ciudad = region.split(",")[0];
+      const ciudadNormalizada = ciudad.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      if (preguntaNormalizada.includes(ciudadNormalizada)) {
+        regionEncontrada = ciudad;
+        break;
+      }
+    }
+
+    if (climaContenedor) {
+      let divClima = null;
+
+      if (regionEncontrada) {
+        divClima = Array.from(climaContenedor.children).find(div =>
+          div.innerText.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(regionEncontrada.toLowerCase())
+        );
+        respuesta = divClima
+          ? divClima.innerText
+          : `No tengo el clima de ${regionEncontrada} cargado aún.`;
+      } else {
+        // Si no detecta región, muestra Santiago
+        divClima = Array.from(climaContenedor.children).find(div =>
+          div.innerText.toLowerCase().includes("santiago")
+        );
+        respuesta = divClima
+          ? divClima.innerText
+          : "No tengo el clima de Santiago cargado aún.";
+      }
+    } else {
+      respuesta = "No tengo información del clima disponible aún.";
+    }
+
   } else if (pregunta.includes("internacionales") || pregunta.includes("noticias internacionales")) {
     if (noticiasInternacionales && noticiasInternacionales.length > 0) {
       const noticia = noticiasInternacionales[0];
@@ -317,47 +395,47 @@ function handleUserInput() {
     } else {
       respuesta = "No hay noticias internacionales disponibles aún.";
     }
-  } else if (pregunta.includes("noticias nacional") || pregunta.includes("noticias") ) {
+  } else if (pregunta.includes("noticias")) {
+    let noticiasMostrar = "";
+
     if (noticiasChile && noticiasChile.length > 0) {
-      const noticia = noticiasChile[0];
-      respuesta = `Última noticia de Chile: <a href="${noticia.url || noticia.link}" target="_blank" style="color:#1DA1F2; text-decoration:underline;">${noticia.title}</a>`;
+      const noticiaChile = noticiasChile[0];
+      noticiasMostrar += `Última noticia de Chile: <a href="${noticiaChile.url || noticiaChile.link}" target="_blank" style="color:#1DA1F2; text-decoration:underline;">${noticiaChile.title}</a><br><br>`;
     } else {
-      respuesta = "No hay noticias de Chile disponibles aún.";
+      noticiasMostrar += "No hay noticias de Chile.<br><br>";
     }
+
+    if (noticiasInternacionales && noticiasInternacionales.length > 0) {
+      const noticiaInternacional = noticiasInternacionales[0];
+      noticiasMostrar += `Última noticia internacional: <a href="${noticiaInternacional.url || noticiaInternacional.link}" target="_blank" style="color:#1DA1F2; text-decoration:underline;">${noticiaInternacional.title}</a>`;
+    } else {
+      noticiasMostrar += "No hay noticias internacionales.";
+    }
+
+    respuesta = noticiasMostrar;
+
   } else if (pregunta.includes("sismo") || pregunta.includes("terremoto")) {
     const sismoDetalle = document.getElementById("ultimo-detalle");
-    const ultimoMapa = document.getElementById("ultimo-mapa").querySelector("iframe");
+    const ultimoMapa = document.getElementById("ultimo-mapa")?.querySelector("iframe");
     if (sismoDetalle && ultimoMapa) {
       const src = ultimoMapa.src;
       const coordsMatch = src.match(/q=([^&]*)/);
       const coords = coordsMatch ? coordsMatch[1] : null;
       const mapaLink = coords ? `https://maps.google.com/maps?q=${coords}` : null;
       respuesta = `Último sismo: ${sismoDetalle.innerText}` +
-        (mapaLink ? ` <a href="${mapaLink}" target="_blank" style="color:#1DA1F2; text-decoration:underline;">Ver mapa</a> Escribe mayor intensidad para ver el ultimo sismo de mayor intensidad ` : "");
-        
+        (mapaLink ? ` <a href="${mapaLink}" target="_blank" style="color:#1DA1F2; text-decoration:underline;">Ver mapa</a>` : "");
     } else {
       respuesta = "No tengo datos del último sismo aún.";
     }
-  } else if (pregunta.includes("mayor")||pregunta.includes("mayor intensidad") ) {
-    const mayorDetalle = document.getElementById("mayor-detalle");
-    const mayorMapa = document.getElementById("mayor-mapa").querySelector("iframe");
-    if (mayorDetalle && mayorMapa) {
-      const src = mayorMapa.src;
-      const coordsMatch = src.match(/q=([^&]*)/);
-      const coords = coordsMatch ? coordsMatch[1] : null;
-      const mapaLink = coords ? `https://maps.google.com/maps?q=${coords}` : null;
-      respuesta = `Sismo de mayor intensidad: ${mayorDetalle.innerText}` +
-        (mapaLink ? ` <a href="${mapaLink}" target="_blank" style="color:#1DA1F2; text-decoration:underline;">Ver mapa</a>` : "");
-    } else {
-      respuesta = "No tengo datos del sismo de mayor intensidad.";
-    }
-  } else if (pregunta.includes("top") && pregunta.includes("sismo")) {
-    const top3 = document.getElementById("top3-list");
-    respuesta = top3 ? `Top 3 sismos:\n${top3.innerText}` : "No tengo datos de los top 3 sismos.";
   } else {
     for (const clave in conocimientos) {
       if (pregunta.includes(clave)) {
-        respuesta = conocimientos[clave];
+        const valor = conocimientos[clave];
+        if (typeof valor === "function") {
+          respuesta = valor();
+        } else {
+          respuesta = valor;
+        }
         break;
       }
     }
@@ -366,6 +444,9 @@ function handleUserInput() {
   appendMessage("Asistente", respuesta);
   inputField.value = "";
 }
+
+
+
 
 // Eventos para enviar mensaje con botón o tecla Enter
 document.addEventListener("DOMContentLoaded", () => {
@@ -387,6 +468,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+
+  // Opcional: cerrar  y abrir menú al hacer clic fuera
   const menuButton = document.getElementById('menu-button');
   const menu = document.getElementById('menu');
 
@@ -397,7 +480,6 @@ document.addEventListener("DOMContentLoaded", () => {
       menu.style.display = 'block';
     }
   });
-
   // Opcional: cerrar menú al hacer clic fuera
   document.addEventListener('click', (e) => {
     if (!menu.contains(e.target) && e.target !== menuButton) {
@@ -407,7 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-
+ // fecha y hora
 function actualizarFechaHora() {
       const ahora = new Date();
 
@@ -427,7 +509,6 @@ function actualizarFechaHora() {
 
       document.getElementById('fechaHora').textContent = fechaHoraFormateada;
     }
-
     // Actualizar la fecha y hora cada segundo
     setInterval(actualizarFechaHora, 1000);
 
@@ -436,7 +517,7 @@ function actualizarFechaHora() {
 
 
 
-
+//---------noticias-------
 
 // Cargar todas las fuentes (noticias, clima, sismos)
 async function cargarTodasLasFuentes() {
@@ -445,11 +526,20 @@ async function cargarTodasLasFuentes() {
   'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Frss%3Fhl%3Des-419%26gl%3DUS%26ceid%3DUS%3Aes',
   'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Felpais.com%2Frss%2Ffeed%2Felpais%2Fportada.xml',
   'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.infobae.com%2Ffeed%2F',
+  'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Frss%3Fhl%3Des-419%26gl%3DCL%26ceid%3DCL%3Aes-419%26topic%3Dh',
+
+
+  // Google News España
+  'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Frss%3Fhl%3Des%26gl%3DES%26ceid%3DES%3Aes',
+
 
   // Inglés — BBC Mundo
   'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ffeeds.bbci.co.uk%2Fnews%2Fworld%2Frss.xml',
 
   // Más fuentes en inglés para ampliar cobertura:
+
+
+
   // CNN Top Stories
   'https://api.rss2json.com/v1/api.json?rss_url=http%3A%2F%2Frss.cnn.com%2Frss%2Fcnn_topstories.rss',
   // Reuters World News
@@ -457,7 +547,10 @@ async function cargarTodasLasFuentes() {
   // NPR News
   'https://api.rss2json.com/v1/api.json?rss_url=http%3A%2F%2Fwww.npr.org%2Frss%2Frss.php%3Fid%3D1004',
   // AP News World
-  'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fapnews.com%2Fworld-news.rss'
+  'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fapnews.com%2Fworld-news.rss',
+   // Google News USA Inglés
+  'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Frss%3Fhl%3Den-US%26gl%3DUS%26ceid%3DUS%3Aen',
+
   ];
 
   // Llamamos la función modificada para múltiples fuentes
@@ -474,8 +567,96 @@ async function cargarTodasLasFuentes() {
   cargarClima();
   fetchEarthquakes();
 }
+// Función para cargar noticias para chile
+
+let noticiasChile = [];
+let noticiasInternacionales = [];
+
+// Función auxiliar para calcular tiempo transcurrido desde la publicación
+// Función para calcular el tiempo transcurrido desde la fecha publicada
+function formatearTiempoYHoraChile(pubDateStr) {
+  const publicado = new Date(pubDateStr); // Se asume en UTC o ISO
+  const ahoraChile = new Date().toLocaleString("en-US", { timeZone: "America/Santiago" });
+  const ahora = new Date(ahoraChile); // Ahora, pero en Chile
+
+  // Convertir la hora de publicación a hora Chile
+  const publicadoChileStr = publicado.toLocaleString("en-US", { timeZone: "America/Santiago" });
+  const publicadoChile = new Date(publicadoChileStr);
+
+  let diffMs = ahora - publicadoChile;
+
+  // Si la noticia es futura, mostramos "Publicado recientemente"
+  if (diffMs < 0) {
+    return `Publicado recientemente`;
+  }
+
+  const diffMin = Math.floor(diffMs / 60000);
+  if (diffMin < 60) return `${diffMin} min atrás | ${publicadoChile.toLocaleTimeString('es-CL', { timeZone: 'America/Santiago', hour: '2-digit', minute: '2-digit', hour12: false })}`;
+
+  const diffHrs = Math.floor(diffMin / 60);
+  if (diffHrs < 24) return `${diffHrs} h atrás | ${publicadoChile.toLocaleTimeString('es-CL', { timeZone: 'America/Santiago', hour: '2-digit', minute: '2-digit', hour12: false })}`;
+
+  const diffDays = Math.floor(diffHrs / 24);
+  return `${diffDays} días atrás | ${publicadoChile.toLocaleDateString('es-CL', { timeZone: 'America/Santiago' })}`;
+}
 
 
+
+// Función para cargar noticias locales o de una fuente única
+async function cargarNoticias(apiUrl, contenedorId, limit = 10) {
+  try {
+    const res = await fetch(apiUrl);
+    const data = await res.json();
+    const contenedor = document.getElementById(contenedorId);
+    if (!contenedor) return;
+    contenedor.innerHTML = '';
+
+    const items = data.articles || data.items || [];
+    if (!items.length) {
+      contenedor.innerHTML = '<p>No hay noticias disponibles.</p>';
+      return;
+    }
+
+    items.sort((a, b) => new Date(b.publishedAt || b.pubDate) - new Date(a.publishedAt || a.pubDate));
+    const noticiasRecientes = items.slice(0, limit);
+
+    if (contenedorId === 'mundo-news') {
+      noticiasInternacionales = noticiasRecientes;
+    } else if (contenedorId === 'chile-news') {
+      noticiasChile = noticiasRecientes;
+      if (noticiasChile.length > 0) {
+        const noticia = noticiasChile[0];
+        mostrarAlertaNoticia(noticia.title, noticia.url || noticia.link);
+      }
+    }
+
+    for (let i = 0; i < noticiasRecientes.length; i++) {
+      const item = noticiasRecientes[i];
+      const titulo = item.title || 'Sin título';
+      const link = item.url || item.link || '#';
+      const infoTiempo = formatearTiempoYHoraChile(item.publishedAt || item.pubDate);
+
+      const div = document.createElement('div');
+      div.className = 'news-item';
+      if (i === 0) div.classList.add('ultima-noticia');
+
+      div.innerHTML = `
+        <div class="news-title">${titulo}</div>
+        <div class="news-date">${infoTiempo}</div>
+        <a href="${link}" target="_blank" class="btn-vermas">Ver más</a>
+        <div class="d-flex justify-content-end">
+          <span class="badge rounded-pill text-bg-dark">VIVO24® | Noticias</span>
+        </div>
+      `;
+      contenedor.appendChild(div);
+    }
+  } catch (e) {
+    console.error('Error cargando noticias:', e);
+  }
+}
+
+
+// Función para cargar noticias de múltiples fuentes (internacionales)
 async function cargarNoticiasMultiples(apiUrls, contenedorId, limit = 10) {
   const contenedor = document.getElementById(contenedorId);
   if (!contenedor) return;
@@ -488,17 +669,7 @@ async function cargarNoticiasMultiples(apiUrls, contenedorId, limit = 10) {
       const res = await fetch(url);
       const data = await res.json();
       const items = data.articles || data.items || [];
-
-      const ahora = new Date();
-      const hace2Dias = new Date();
-      hace2Dias.setDate(ahora.getDate() - 2);
-
-      const noticiasRecientes = items.filter(item => {
-        const fecha = new Date(item.publishedAt || item.pubDate);
-        return fecha >= hace2Dias && fecha <= ahora;
-      });
-
-      todasLasNoticias = todasLasNoticias.concat(noticiasRecientes);
+      todasLasNoticias = todasLasNoticias.concat(items);
     } catch (e) {
       console.warn(`Error al cargar fuente: ${url}`, e);
     }
@@ -509,22 +680,20 @@ async function cargarNoticiasMultiples(apiUrls, contenedorId, limit = 10) {
     return;
   }
 
-  // Ordenar todas las noticias por fecha descendente
   todasLasNoticias.sort((a, b) => new Date(b.publishedAt || b.pubDate) - new Date(a.publishedAt || a.pubDate));
+  const noticiasRecientes = todasLasNoticias.slice(0, limit);
+  noticiasInternacionales = noticiasRecientes;
 
-//alertas
-  if (todasLasNoticias.length > 0) {
-  const noticia = todasLasNoticias[0];
-  mostrarAlertaNoticia(noticia.title, noticia.url || noticia.link);
-}
+  if (noticiasRecientes.length > 0) {
+    const noticia = noticiasRecientes[0];
+    mostrarAlertaNoticia(noticia.title, noticia.url || noticia.link);
+  }
 
-
-  // Mostrar noticias (máximo según `limit`)
-  for (let i = 0; i < Math.min(limit, todasLasNoticias.length); i++) {
-    const item = todasLasNoticias[i];
-    const fecha = new Date(item.publishedAt || item.pubDate);
+  for (let i = 0; i < noticiasRecientes.length; i++) {
+    const item = noticiasRecientes[i];
     const titulo = item.title || 'Sin título';
     const link = item.url || item.link || '#';
+    const infoTiempo = formatearTiempoYHoraChile(item.publishedAt || item.pubDate);
 
     const div = document.createElement('div');
     div.className = 'news-item';
@@ -532,9 +701,9 @@ async function cargarNoticiasMultiples(apiUrls, contenedorId, limit = 10) {
 
     div.innerHTML = `
       <div class="news-title">${titulo}</div>
-      <div class="news-date">${fecha.toLocaleString('es-CL', { hour12: false })}</div>
+      <div class="news-date">${infoTiempo}</div>
       <a href="${link}" target="_blank" class="btn-vermas">Ver más</a>
-      <div class="d-flex justify-content-end"> 
+      <div class="d-flex justify-content-end">
         <span class="badge rounded-pill text-bg-dark">VIVO24® | Noticias</span>
       </div>
     `;
@@ -543,6 +712,9 @@ async function cargarNoticiasMultiples(apiUrls, contenedorId, limit = 10) {
 }
 
 
+
+
+// motrar alerta para noticias en chile
 function mostrarAlertaNoticia(titulo, link) {
   const alerta = document.getElementById('alerta-noticia');
   if (!alerta) return;
@@ -556,11 +728,75 @@ function mostrarAlertaNoticia(titulo, link) {
   }, 3500);
 }
 
-
-
-
 // Inicializar
 cargarTodasLasFuentes();
-
 // Actualizar cada 60 segundos
 setInterval(cargarTodasLasFuentes, 60000);
+
+
+let enviados = new Set();
+
+async function extraerYEnviarRSS() {
+  try {
+    const res = await fetch('https://rss.nytimes.com/services/xml/rss/nyt/World.xml');
+    const xmlText = await res.text();
+
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlText, 'application/xml');
+    const items = xmlDoc.querySelectorAll('item');
+
+    const ahora = new Date();
+    const haceDosDias = new Date(ahora.getTime() - 2 * 24 * 60 * 60 * 1000); // 2 días atrás
+
+    let noticias = Array.from(items).map(item => {
+      const title = item.querySelector('title')?.textContent || '';
+      const link = item.querySelector('link')?.textContent || '';
+      const pubDateStr = item.querySelector('pubDate')?.textContent || '';
+      const pubDate = new Date(pubDateStr);
+      return { title, link, pubDateStr, pubDate };
+    });
+
+    // Filtrar solo noticias entre haceDosDias y ahora
+    noticias = noticias.filter(n => n.pubDate >= haceDosDias && n.pubDate <= ahora);
+
+    // Ordenar por fecha descendente (más recientes primero)
+    noticias.sort((a, b) => b.pubDate - a.pubDate);
+
+    // Filtrar para evitar repetidos y tomar máximo 5
+    const nuevasNoticias = noticias.filter(n => !enviados.has(n.title)).slice(0, 5);
+
+    if (nuevasNoticias.length === 0) {
+      console.log("Sin noticias nuevas en últimas 48 horas.");
+      return;
+    }
+
+    // Guardar títulos ya enviados
+    nuevasNoticias.forEach(n => enviados.add(n.title));
+
+    // Preparar datos para enviar
+    const dataEnviar = nuevasNoticias.map(({ title, link, pubDateStr }) => ({
+      title,
+      link,
+      pubDate: pubDateStr
+    }));
+
+    const sheetdbUrl = 'https://sheetdb.io/api/v1/sdvwoo3id8xlm';
+    const resSheet = await fetch(sheetdbUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ data: dataEnviar })
+    });
+
+    const result = await resSheet.json();
+    console.log('Nuevas noticias enviadas:', result);
+
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+setInterval(extraerYEnviarRSS, 10000);
+extraerYEnviarRSS();
+

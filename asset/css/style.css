@@ -75,6 +75,8 @@ header {
   padding: 16px;
   border: 1px solid #707070;
   border-radius: 10px;
+  height: 80px;
+  
 }
 
 .news-internacional .news-title,
@@ -647,4 +649,10 @@ header {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .news-internacional, .news-chile {
+    height: auto !important;
+  }
 }
