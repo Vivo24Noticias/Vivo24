@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Noticias con NYTimes</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: #f8f9fa;
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    header, footer {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .card {
+      margin-bottom: 1.25rem;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+      transition: transform 0.15s ease-in-out;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgb(0 0 0 / 0.15);
+    }
+    .news-date {
+      font-style: italic;
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+    .card-img-top {
+      max-height: 180px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1 class="display-5 fw-bold">Noticias Recientes</h1>
+  <p class="text-muted">Últimas noticias extraídas directamente del RSS</p>
+</header>
+
+<main class="container">
+  <div id="listaNoticias" class="row gy-3">
+    <!-- Las noticias aparecerán aquí -->
+  </div>
+</main>
+
+<footer class="mt-5 text-center text-muted">
+  &copy; 2025 Mi Proyecto de Noticias
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const sheetdbUrl = 'https://sheetdb.io/api/v1/sdvwoo3id8xlm';
+  const lista = document.getElementById('listaNoticias');
+
+  async function mostrarNoticiasDesdeRSS() {
+    lista.innerHTML = '<p class="text-center text-secondary">Cargando noticias desde RSS...</p>';
+    try {
+      const resRSS = await fetch('https://rss.nytimes.com/services/xml/rss/nyt/World.xml');
+      const xmlText = await resRSS.text();
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlText, 'application/xml');
+      const items = xmlDoc.querySelectorAll('item');
+
+      lista.innerHTML = '';
+
+      for (const item of items) {
+        const title = item.querySelector('title')?.textContent || 'Sin título';
+        const link = item.querySelector('link')?.textContent || '#';
+        const pubDate = item.querySelector('pubDate')?.textContent || '';
+        
+        // Intenta obtener imagen (media:content o enclosure)
+        const media = item.querySelector('media\\:content, enclosure');
+        const image = media?.getAttribute('url') || 'https://via.placeholder.com/600x300?text=Sin+Imagen';
+
+        const col = document.createElement('div');
+        col.className = 'col-12 col-md-6 col-lg-4';
+
+        col.innerHTML = `
+          <div class="card h-100">
+            <img src="${image}" class="card-img-top" alt="Imagen noticia">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">${title}</h5>
+              <p class="card-text news-date mb-3">${pubDate}</p>
+              <a href="${link}" target="_blank" class="btn btn-primary mt-auto">Ver noticia</a>
+            </div>
+          </div>
+        `;
+
+        lista.appendChild(col);
+      }
+
+    } catch (error) {
+      lista.innerHTML = '<p class="text-center text-danger">Error al cargar noticias desde RSS.</p>';
+      console.error(error);
+    }
+  }
+
+  // Solo guardar títulos nuevos en SheetDB para control (opcional)
+  async function guardarTitulosEnSheetDB() {
+    try {
+      const resRSS = await fetch('https://rss.nytimes.com/services/xml/rss/nyt/World.xml');
+      const xmlText = await resRSS.text();
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlText, 'application/xml');
+      const items = xmlDoc.querySelectorAll('item');
+
+      const titulos = Array.from(items).map(i => i.querySelector('title')?.textContent || '');
+
+      const resSheet = await fetch(sheetdbUrl);
+      const datosExistentes = await resSheet.json();
+      const titulosExistentes = new Set(datosExistentes.map(n => n.title));
+
+      const titulosNuevos = titulos.filter(t => !titulosExistentes.has(t)).slice(0, 10);
+
+      if (titulosNuevos.length === 0) {
+        console.log('No hay títulos nuevos para guardar.');
+        return;
+      }
+
+      const dataEnviar = titulosNuevos.map(title => ({ title }));
+
+      const resPost = await fetch(sheetdbUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: dataEnviar })
+      });
+
+      const result = await resPost.json();
+      console.log('Títulos nuevos guardados:', result);
+
+    } catch (e) {
+      console.error('Error guardando títulos en SheetDB:', e);
+    }
+  }
+
+  mostrarNoticiasDesdeRSS();
+  guardarTitulosEnSheetDB();
+  setInterval(guardarTitulosEnSheetDB, 300000); // Cada 5 minutos solo guardar títulos
+
+</script>
+
+</body>
+</html>
