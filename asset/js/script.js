@@ -722,9 +722,9 @@ function mostrarAlertaNoticia(titulo, link) {
 
 
   // Cuando se haga click en el botón, recarga la página
-    document.getElementById('btnActualizar').addEventListener('click', function() {
-      location.reload();
-    });
+document.getElementById('btnActualizar').addEventListener('click', function() {
+  location.reload();
+});
 
 
 
