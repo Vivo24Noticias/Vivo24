@@ -722,9 +722,62 @@ function mostrarAlertaNoticia(titulo, link) {
 
 
   // Cuando se haga click en el botón, recarga la página
-    document.getElementById('btnActualizar').addEventListener('click', function() {
-      location.reload();
+document.getElementById('btnActualizar').addEventListener('click', function() {
+location.reload();
+});
+
+
+  const sheetdbUrl = 'https://sheetdb.io/api/v1/il6vphlpctd08';
+
+async function cargarComentarios() {
+    try {
+      const res = await fetch(sheetdbUrl);
+      const comentarios = await res.json();
+
+      const lista = comentarios.map(c => `
+        <div class="card mb-2">
+          <div class="card-body">
+            <strong>${c.nombre || 'Anónimo'}:</strong>
+            <p>${c.comentario}</p>
+            <small class="text-muted">${c.fecha || ''}</small>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('comentarios-lista').innerHTML = lista;
+    } catch (err) {
+      document.getElementById('comentarios-lista').innerHTML = '<p>Error al cargar comentarios.</p>';
+    }
+  }
+
+// document.getElementById('comentario-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nombre = document.getElementById('nombre').value.trim();
+    const comentario = document.getElementById('comentario').value.trim();
+    const fecha = new Date().toLocaleString();
+
+    if (!comentario) return;
+
+    const data = {
+      data: {
+        nombre: nombre || 'Anónimo',
+        comentario,
+        fecha
+      }
+    };
+
+    await fetch(sheetdbUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     });
+
+    document.getElementById('comentario-form').reset();
+    cargarComentarios();
+  // });
+// Cargar comentarios al inicio
+// cargarComentarios();
+
 
 
 // Inicializar
