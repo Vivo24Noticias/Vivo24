@@ -108,18 +108,6 @@ document.querySelectorAll('.scroll-button').forEach(btn => {
 
 
 
-// Contador actualización de pagina
-let tiempoRestante = 60;
-const contador = document.getElementById('contador');
-setInterval(() => {
-  tiempoRestante--;
-  if (tiempoRestante <= 0) {
-    tiempoRestante = 60;
-    cargarTodasLasFuentes();
-  }
-  if (contador) contador.textContent = `Próxima actualización en: ${tiempoRestante} segundos`;
-}, 1000);
-
 
 
 // === Sismos ===
@@ -167,6 +155,9 @@ async function fetchEarthquakes() {
     console.error('Error al obtener sismos:', err);
   }
 }
+
+
+
 
 
 
@@ -728,10 +719,18 @@ function mostrarAlertaNoticia(titulo, link) {
   }, 3500);
 }
 
+
+
+  // Cuando se haga click en el botón, recarga la página
+    document.getElementById('btnActualizar').addEventListener('click', function() {
+      location.reload();
+    });
+
+
 // Inicializar
 cargarTodasLasFuentes();
 // Actualizar cada 60 segundos
-setInterval(cargarTodasLasFuentes, 60000);
+
 
 
 

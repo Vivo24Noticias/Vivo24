@@ -656,3 +656,66 @@ header {
     height: auto !important;
   }
 }
+
+button#btnActualizar {
+    margin-left: auto;
+    margin-right: auto;
+    display: block; /* para que margin auto funcione */
+    max-width: 300px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #000000;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 28px;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
+    user-select: none;
+    max-width: 300px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  button#btnActualizar:hover,
+  button#btnActualizar:focus {
+    background-color: #0056b3;
+    box-shadow: 0 6px 20px rgba(0, 86, 179, 0.6);
+    outline: none;
+  }
+
+  button#btnActualizar:active {
+    background-color: #004494;
+    box-shadow: 0 2px 8px rgba(0, 68, 148, 0.8);
+    transform: scale(0.95); /* efecto pulsación */
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+    fill: white;
+    transition: transform 0.3s ease;
+  }
+
+  button#btnActualizar:hover svg,
+  button#btnActualizar:focus svg {
+    transform: rotate(20deg);
+  }
+
+  /* Ajustes para pantallas pequeñas */
+  @media (max-width: 480px) {
+    button#btnActualizar {
+      padding: 14px 24px;
+      font-size: 1.3rem;
+      border-radius: 40px;
+    }
+    svg {
+      width: 28px;
+      height: 28px;
+    }
+  }
