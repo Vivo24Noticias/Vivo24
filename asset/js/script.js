@@ -91,11 +91,6 @@ async function cargarClima() {
 
 
 
-
-
-
-
-
 // Scroll botón bajar
 document.querySelectorAll('.scroll-button').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -162,10 +157,7 @@ async function fetchEarthquakes() {
 
 
 
-
-
-
-// cerebro para chatbot, 
+// ---cerebro para chatbot, ---
 const chistes = [
   "¿Por qué las focas miran siempre hacia arriba? ¡Porque ahí están los focos!",
   "¿Qué le dijo una cebolla a otra cebolla? ¡Eres la única que me hace llorar!",
@@ -296,7 +288,6 @@ const conocimientos = {
 // Función para mostrar mensaje inicial
 function mostrarMensajeInicial() {
  appendMessage("Asistente", "¡Hola! Soy tu asistente. Escribe lo que quieras saber, por ejemplo: clima en Santiago, noticias , últimos sismos o un chiste.");
-
 }
 // Modifica toggleChat para mostrar el mensaje la primera vez que se abre
 function toggleChat() {
@@ -322,7 +313,6 @@ function appendMessage(author, text) {
   chatMessages.appendChild(message);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
-
 // Manejar input usuario y generar respuesta
 async function handleUserInput() {
   const inputField = document.getElementById("user-input");
@@ -435,10 +425,6 @@ async function handleUserInput() {
   appendMessage("Asistente", respuesta);
   inputField.value = "";
 }
-
-
-
-
 // Eventos para enviar mensaje con botón o tecla Enter
 document.addEventListener("DOMContentLoaded", () => {
   const btnEnviar = document.getElementById("send-btn");
@@ -456,6 +442,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
 
 
 
@@ -500,48 +487,90 @@ function actualizarFechaHora() {
 
       document.getElementById('fechaHora').textContent = fechaHoraFormateada;
     }
-    // Actualizar la fecha y hora cada segundo
-    setInterval(actualizarFechaHora, 1000);
+// Actualizar la fecha y hora cada segundo
+setInterval(actualizarFechaHora, 1000);
 
     // Mostrar inmediatamente al cargar la página
-    actualizarFechaHora();
+actualizarFechaHora();
 
 
 
 //---------noticias-------
 
+
+
+    // Función para cargar noticias (usa la API RSS2JSON o similar)
+async function cargarNoticiasdeporte(apiUrl, contenedorId, limit = 10) {
+      try {
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error('Error al cargar noticias');
+        const data = await res.json();
+
+        const contenedor = document.getElementById(contenedorId);
+        if (!contenedor) return;
+        contenedor.innerHTML = '';
+
+        const items = data.articles || data.items || [];
+        if (!items.length) {
+          contenedor.innerHTML = '<p>No hay noticias disponibles.</p>';
+          return;
+        }
+
+        // Ordenar por fecha descendente
+        items.sort((a, b) => new Date(b.publishedAt || b.pubDate) - new Date(a.publishedAt || a.pubDate));
+        const noticiasRecientes = items.slice(0, limit);
+
+        // Alerta para la primera noticia
+        if (noticiasRecientes.length > 0) {
+          const noticia = noticiasRecientes[0];
+          mostrarAlertaNoticia(noticia.title, noticia.url || noticia.link);
+        }
+
+        // Construcción de cada noticia
+        noticiasRecientes.forEach((item, i) => {
+          const titulo = item.title || 'Sin título';
+          const link = item.url || item.link || '#';
+          const infoTiempo = formatearTiempoYHoraChile(item.publishedAt || item.pubDate);
+
+          const div = document.createElement('div');
+          div.className = 'news-item';
+          if (i === 0) div.classList.add('ultima-noticia');
+
+          div.innerHTML = `
+            <div class="news-title">${titulo}</div>
+            <div class="news-date">${infoTiempo}</div>
+            <a href="${link}" target="_blank" class="btn-vermas">Ver más</a>
+            <div class="d-flex justify-content-end">
+              <span class="badge rounded-pill text-bg-dark">VIVO24® | Noticias</span>
+            </div>
+          `;
+          contenedor.appendChild(div);
+        });
+
+      } catch (e) {
+        console.error('Error cargando noticias:', e);
+        const contenedor = document.getElementById(contenedorId);
+        if (contenedor) contenedor.innerHTML = '<p>Error al cargar noticias.</p>';
+      }
+}
+
+    // URL RSS2JSON para Google News deportes Chile
+    // Puedes obtener un API key gratuita en https://rss2json.com/docs
+    // Esta URL busca "deportes" en Google News para Chile
+    const apiGoogleNewsDeportesChile = 'https://api.rss2json.com/v1/api.json?rss_url=' + 
+      encodeURIComponent('https://news.google.com/rss/search?q=fútbol+deporte&hl=es-419&gl=CL&ceid=CL:es');
+
+    // Carga noticias al iniciar la página
+    cargarNoticiasdeporte(apiGoogleNewsDeportesChile, 'contenedorNoticias', 10);
+
+
 // Cargar todas las fuentes (noticias, clima, sismos)
 async function cargarTodasLasFuentes() {
   const fuentesInternacionales = [
   // Español
-  'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Frss%3Fhl%3Des-419%26gl%3DUS%26ceid%3DUS%3Aes',
   'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Felpais.com%2Frss%2Ffeed%2Felpais%2Fportada.xml',
   'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.infobae.com%2Ffeed%2F',
-  'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Frss%3Fhl%3Des-419%26gl%3DCL%26ceid%3DCL%3Aes-419%26topic%3Dh',
-
-
-  // Google News España
-  'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Frss%3Fhl%3Des%26gl%3DES%26ceid%3DES%3Aes',
-
-
-  // Inglés — BBC Mundo
-  'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ffeeds.bbci.co.uk%2Fnews%2Fworld%2Frss.xml',
-
-  // Más fuentes en inglés para ampliar cobertura:
-
-
-
-  // CNN Top Stories
-  'https://api.rss2json.com/v1/api.json?rss_url=http%3A%2F%2Frss.cnn.com%2Frss%2Fcnn_topstories.rss',
-  // Reuters World News
-  'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ffeeds.reuters.com%2FReuters%2FWorldNews',
-  // NPR News
-  'https://api.rss2json.com/v1/api.json?rss_url=http%3A%2F%2Fwww.npr.org%2Frss%2Frss.php%3Fid%3D1004',
-  // AP News World
-  'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fapnews.com%2Fworld-news.rss',
-   // Google News USA Inglés
-  'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Frss%3Fhl%3Den-US%26gl%3DUS%26ceid%3DUS%3Aen',
-
+  'https://api.rss2json.com/v1/api.json?rss_url=https://news.google.com/rss?hl=es-419&gl=US&ceid=US:es-419',
   ];
 
   // Llamamos la función modificada para múltiples fuentes
@@ -725,6 +754,7 @@ function mostrarAlertaNoticia(titulo, link) {
 document.getElementById('btnActualizar').addEventListener('click', function() {
   location.reload();
 });
+
 
 
 

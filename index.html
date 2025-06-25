@@ -40,9 +40,23 @@
   <div id="alerta-noticia" class="alerta-noticia hidden"></div>
 
   <!-- Pantalla Splash -->
-  <div id="splash-screen">
-    VIVO24®
+<div id="splash-screen">
+  <div class="centro">
+      <div style="
+         position: absolute; 
+         left: 50%; 
+         transform: translateX(-50%); 
+         width: max-content;
+         pointer-events: none; /* para evitar interferir con el botón */
+         font-size: 30px;
+  ">
+    VIVO24® | Noticias
   </div>
+  </div>
+  <div class="abajo">
+    <h6>Versión 1.0.0 Fabian Salas</h6>
+  </div>
+</div>
 
 <header style="
   position: fixed;
@@ -105,12 +119,12 @@
       padding: 10px 0; 
       margin: 0;
     ">
-      <li><a href="#" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Inicio</a></li>
-      <li><a href="#internacional" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Noticias Internacionales</a></li>
-      <li><a href="#nacional" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Noticias Nacionales</a></li>
-      <li><a href="#sismo" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Sismos</a></li>
+      <li><a href="index.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Inicio</a></li>
+      <li><a href="internacional.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Noticias Internacionales</a></li>
+      <li><a href="index.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Noticias Nacionales</a></li>
+       <li><a href="deportes.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Futbol y Deporte</a></li>
       <li><a href="monitoreo.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">App Monitoreo Sismo</a></li>
-      <li><a href="futbol.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Futbol</a></li>
+     
     </ul>
   </nav>
 </header>
@@ -146,10 +160,7 @@
       
 
       <hr class="text-secondary my-3" />
-      
-    <span id='internacional'class="badge text-bg-dark mb-4">Noticias Internacionales</span>
-      <div id="mundo-news" class="scrollable-content news-internacional">Cargando noticias...</div>
-      <button class="scroll-button mt-3" data-target="mundo-news">⬇Bajar</button>
+
     </div>
 
     <!-- Columna derecha: Sismos -->
