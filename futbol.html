@@ -87,6 +87,10 @@
       }
     }
 
+    // Muestra alerta con título y link (puedes cambiarlo por algo más avanzado)
+    function mostrarAlertaNoticia(titulo, url) {
+      alert(`Última noticia:\n${titulo}\n\n`);
+    }
 
     // Función para cargar noticias (usa la API RSS2JSON o similar)
     async function cargarNoticias(apiUrl, contenedorId, limit = 10) {
