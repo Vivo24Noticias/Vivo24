@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="description" content="VIVO24 Noticias en español actualizadas en tiempo real: sismos, clima y titulares internacionales y nacionales desde fuentes como BBC y NYTimes." />
+  <meta name="keywords" content="noticias, Chile, sismos, clima, noticias en vivo, BBC Mundo, NYTimes, actualidad, noticias internacionales" />
+  <meta name="author" content="VIVO24 Noticias" />
+  <meta name="robots" content="index, follow" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="VIVO24 | Noticias en tiempo real de Chile y el mundo" />
+  <meta property="og:description" content="Noticias actualizadas, clima, sismos y titulares de fuentes confiables como BBC y NYTimes." />
+  <meta property="og:url" content="https://tusitio.com/" />
+  <meta property="og:image" content="https://tusitio.com/img/vivo24-portada.jpg" />
+  <meta property="og:site_name" content="VIVO24 Noticias" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="VIVO24 | Noticias Chile y el Mundo en tiempo real" />
+  <meta name="twitter:description" content="Noticias al instante desde fuentes confiables: BBC Mundo, NYTimes y más. Información actualizada de sismos y clima." />
+  <meta name="twitter:image" content="https://tusitio.com/img/vivo24-portada.jpg" />
+  <meta name="twitter:site" content="@vivo24noticias" />
+
+
+
+  <title>VIVO24 | Noticias al instante, sismos y clima en Chile</title>
+  <!-- Bootstrap CSS (sin clases responsive en HTML) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="asset/css/style.css" />
+  <!-- Favicon (planeta) -->
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/29/29844.png" type="image/png" />
+<!-- Sitemap y canonical (opcional pero recomendado) -->
+  <link rel="canonical" href="https://tusitio.com/" />
+
+
+</head>
+<body>
+   <!-- Alerta  -->
+  <div id="alerta-noticia" class="alerta-noticia hidden"></div>
+
+  <!-- Pantalla Splash -->
+  <div id="splash-screen">
+  <div class="centro">
+      <div style="
+         position: absolute; 
+         left: 50%; 
+         transform: translateX(-50%); 
+         width: max-content;
+         pointer-events: none; /* para evitar interferir con el botón */
+         font-size: 30px;
+  ">
+    VIVO24® | Noticias
+  </div>
+  </div>
+  <div class="abajo">
+    <h6>Versión 1.0.0 Fabian Salas</h6>
+  </div>
+</div>
+
+<header style="
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(90deg, #000000, #06768a);
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+  user-select: none;
+  z-index: 1030;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+">
+  <!-- Título centrado -->
+  <div style="
+    position: absolute; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: max-content;
+    pointer-events: none; /* para evitar interferir con el botón */
+  ">
+    VIVO24® | Noticias
+  </div>
+
+  <!-- Botón menú hamburguesa -->
+  <button id="menu-button" aria-label="Abrir menú" 
+          style="
+            margin-left: auto; 
+            background: transparent; 
+            border: none; 
+            color: white; 
+            font-size: 1.8rem; 
+            cursor: pointer;
+            z-index: 1040; /* encima del título */
+          ">
+    &#9776;
+  </button>
+
+  <!-- Menú desplegable -->
+  <nav id="menu" 
+       style="
+         position: fixed; 
+         top: 60px; 
+         right: 10px; 
+         background: #000000; 
+         border-radius: 8px; 
+         box-shadow: 0 0 8px rgba(29,161,242,0.7); 
+         display: none; 
+         min-width: 160px; 
+         z-index: 1050;
+       ">
+    <ul style="
+      list-style: none; 
+      padding: 10px 0; 
+      margin: 0;
+    ">
+      <li><a href="index.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Inicio</a></li>
+      <li><a href="internacional.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Noticias Internacionales</a></li>
+      <li><a href="index.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Noticias Nacionales</a></li>
+       <li><a href="deportes.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Futbol y Deporte</a></li>
+      <li><a href="monitoreo.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">App Monitoreo Sismo</a></li>
+     
+    </ul>
+  </nav>
+</header>
+
+
+
+
+  <!-- Contenedor principal -->
+  <div class="container content-area mt-2">
+
+    <!-- Columna izquierda: Clima -->
+    <div class="left-column">
+      <span class="badge text-bg-success">Clima en Chile</span>
+      <p id="fechaHora" class="fs-11 text-center"></p>
+      <div id="weather-container" class="scrollable-content">Cargando clima...</div>
+    </div>
+
+    <!-- Columna central: Noticias -->
+    <div class="center-column d-flex flex-column ">
+      <hr class="text-secondary my-3" />
+             <button id="btnActualizar" aria-label="Actualizar página" class="mb-3 mt-2">
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.65 6.35a7.95 7.95 0 0 0-11.3 0 7.95 7.95 0 0 0 0 11.3 7.95 7.95 0 0 0 11.3 0 7.95 7.95 0 0 0 0-11.3zm-1.41 9.89-1.42-1.42a3.99 3.99 0 0 1-5.65-5.65l-1.42-1.42"/>
+    <path d="M12 4v4h4"/>
+  </svg>
+  Actualizar
+</button>
+  
+        <span id='nacional'class="badge text-bg-light mb-5">Futlbol y deporte </span>
+      <div id="contenedorConciertos" class="scrollable-content news-chile">Cargando noticias...</div>
+      <button class="scroll-button mt-3 btn btn-outline-info" data-target="contenedorConciertos">⬇Bajar</button>
+      
+      
+
+      <hr class="text-secondary my-3" />
+
+    </div>
+
+    <!-- Columna derecha: Sismos -->
+    
+
+    <div class="right-column">
+      <span id="sismo" class="badge text-bg-danger mb-3 mt-3">🟠 Sismos Dentro 24h</span>
+      
+      <div id="sismos-widget">
+        <a href="monitoreo.html" class="btnmonitoreo btn-sm mt-3 shadow text-center mb-3" role="button">
+             ir APP Monitoreo  Sismo 24h
+          </a>
+          
+  
+
+
+        <div id="sismo-mayor" class="sismo-box red">
+          <strong>Sismo de mayor intensidad 24h:</strong>
+          <div id="mayor-detalle">Cargando...</div>
+          <div id="mayor-mapa"></div>
+        </div>
+
+        <div id="sismo-ultimo" class="sismo-box yellow">
+          <strong>Último sismo registrado:</strong>
+          <div id="ultimo-detalle">Cargando...</div>
+          <div id="ultimo-mapa"></div>
+        </div>
+
+        <div id="sismos-top3" class="sismo-box green">
+          <strong>Top 3 sismos por magnitud 24h:</strong>
+          <div id="top3-list">Cargando...</div>
+        </div>
+
+
+
+
+
+  <!-- Footer fijo -->
+  <footer class="fixed-bottom bg-dark text-white text-center">
+    <strong >Último sismo registrado:</strong>
+
+    <div class="news-ticker">
+      <div id="ticker-text" class="ticker-text"></div>
+      <div id="ticker-text" class="ticker-text"></div>
+    </div>
+
+    <!-- Botón flotante -->
+    <button id="chat-button" onclick="toggleChat()">💬</button>
+
+    <!-- Ventana de chat -->
+    <div id="chat-window">
+      <div id="chat-header">
+        <span>Asistente 🔵 VIVO24 | Noticias</span>
+        <button onclick="toggleChat()" style="background:none; border:none; color:white; font-size:18px;">×</button>
+      </div>
+      <div id="chat-messages"></div>
+      <div id="chat-input">
+        <input type="text" id="user-input" placeholder="Hazme una pregunta..." />
+        <button id="send-btn" onclick="handleUserInput()">Enviar</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script -->
+  <script src="asset/js/script.js"></script>
+</body>
+</html>

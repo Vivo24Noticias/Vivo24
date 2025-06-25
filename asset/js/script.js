@@ -497,6 +497,75 @@ actualizarFechaHora();
 
 //---------noticias-------
 
+async function cargarNoticiasConciertos(apiUrl, contenedorId, limite = 10) {
+  try {
+    const respuesta = await fetch(apiUrl);
+    if (!respuesta.ok) throw new Error('Error al cargar noticias');
+    const datos = await respuesta.json();
+
+    const contenedor = document.getElementById(contenedorId);
+    if (!contenedor) return;
+    contenedor.innerHTML = '';
+
+    const listaNoticias = datos.articles || datos.items || [];
+    if (!listaNoticias.length) {
+      contenedor.innerHTML = '<p>No hay noticias de conciertos disponibles.</p>';
+      return;
+    }
+
+    // Ordenar por fecha descendente
+    listaNoticias.sort((a, b) =>
+      new Date(b.publishedAt || b.pubDate) - new Date(a.publishedAt || a.pubDate)
+    );
+    const noticiasRecientes = listaNoticias.slice(0, limite);
+
+    // Alerta para la primera noticia
+    if (noticiasRecientes.length > 0) {
+      const noticiaPrincipal = noticiasRecientes[0];
+      mostrarAlertaNoticia(noticiaPrincipal.title, noticiaPrincipal.url || noticiaPrincipal.link);
+    }
+
+    // Construcción de cada noticia
+    noticiasRecientes.forEach((noticia, i) => {
+      const titulo = noticia.title || 'Sin título';
+      const enlace = noticia.url || noticia.link || '#';
+      const fechaHora = formatearTiempoYHoraChile(noticia.publishedAt || noticia.pubDate);
+
+      const div = document.createElement('div');
+      div.className = 'noticia-item';
+      if (i === 0) div.classList.add('noticia-principal');
+
+      div.innerHTML = `
+        <div class="noticia-titulo">${titulo}</div>
+        <div class="noticia-fecha">${fechaHora}</div>
+        <a href="${enlace}" target="_blank" class="btn-vermas">Ver más</a>
+        <div class="d-flex justify-content-end">
+          <span class="badge rounded-pill text-bg-dark">VIVO24® | Conciertos</span>
+        </div>
+      `;
+      contenedor.appendChild(div);
+    });
+
+  } catch (error) {
+    console.error('Error cargando noticias de conciertos:', error);
+    const contenedor = document.getElementById(contenedorId);
+    if (contenedor) contenedor.innerHTML = '<p>Error al cargar noticias de conciertos.</p>';
+  }
+}
+
+    // URL RSS2JSON para Google News deportes Chile
+    // Puedes obtener un API key gratuita en https://rss2json.com/docs
+    // Esta URL busca "deportes" en Google News para Chile
+   const apiGoogleNewsConciertosChile = 'https://api.rss2json.com/v1/api.json?rss_url=' +
+  encodeURIComponent('https://news.google.com/rss/search?q=conciertos&hl=es-419&gl=CL&ceid=CL:es-419');
+
+// Cargar noticias al iniciar
+cargarNoticiasConciertos(apiGoogleNewsConciertosChile, 'contenedorConciertos', 10);
+
+
+
+
+
 
 
     // Función para cargar noticias (usa la API RSS2JSON o similar)
