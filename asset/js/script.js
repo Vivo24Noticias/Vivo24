@@ -532,16 +532,19 @@ async function cargarNoticiasConciertos(apiUrl, contenedorId, limite = 10) {
       const fechaHora = formatearTiempoYHoraChile(noticia.publishedAt || noticia.pubDate);
 
       const div = document.createElement('div');
-      div.className = 'noticia-item';
-      if (i === 0) div.classList.add('noticia-principal');
+      div.className = 'news-item';
+      if (i === 0) div.classList.add('ultima-noticia');
 
       div.innerHTML = `
-        <div class="noticia-titulo">${titulo}</div>
-        <div class="noticia-fecha">${fechaHora}</div>
+        <div class="news-title">${titulo}</div>
+        <div class="news-date">${fechaHora}</div>
         <a href="${enlace}" target="_blank" class="btn-vermas">Ver más</a>
         <div class="d-flex justify-content-end">
           <span class="badge rounded-pill text-bg-dark">VIVO24® | Conciertos</span>
         </div>
+
+
+  
       `;
       contenedor.appendChild(div);
     });
@@ -808,7 +811,7 @@ function mostrarAlertaNoticia(titulo, link) {
   const alerta = document.getElementById('alerta-noticia');
   if (!alerta) return;
 
-  alerta.innerHTML = `<a href="${link}" target="_blank" style="color:#000; text-decoration:underline;">Urgente Chile: ${titulo}</a>`;
+  alerta.innerHTML = `<a href="${link}" target="_blank" style="color:#000; text-decoration:underline;">Noticias: ${titulo}</a>`;
   alerta.classList.remove('hidden');
 
   // Ocultar después de 6 segundos
