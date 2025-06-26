@@ -829,8 +829,25 @@ document.getElementById('btnActualizar').addEventListener('click', function() {
 
 
 
+ let progreso = 0;
+  const barra = document.getElementById("barra-carga");
+  const splash = document.getElementById("splash-screen");
 
+  const cargar = setInterval(() => {
+    progreso += 1;
+    barra.style.width = progreso + "%";
+    barra.innerText = progreso + "%";
 
+    if (progreso >= 100) {
+      clearInterval(cargar);
+      // Espera medio segundo y luego oculta la pantalla splash
+      setTimeout(() => {
+        splash.style.opacity = '0';
+        splash.style.transition = 'opacity 1s ease';
+        setTimeout(() => splash.style.display = 'none', 1000);
+      }, 500);
+    }
+  }, 10); // Velocidad de carga (30ms por cada 1%)
     
 
 // Inicializar

@@ -39,24 +39,33 @@
    <!-- Alerta  -->
   <div id="alerta-noticia" class="alerta-noticia hidden"></div>
 
-  <!-- Pantalla Splash -->
+<!-- Pantalla Splash -->
 <div id="splash-screen">
   <div class="centro">
-      <div style="
-         position: absolute; 
-         left: 50%; 
-         transform: translateX(-50%); 
-         width: max-content;
-         pointer-events: none; /* para evitar interferir con el botón */
-         font-size: 30px;
-  ">
-    VIVO24® | Noticias
+    <div style="
+      font-size: 30px;
+      margin-bottom: 20px;
+    ">
+      VIVO24® | Noticias
+    </div>
+
+    <!-- Barra de carga animada -->
+   <div class="progress text-center mx-auto d-block " style="width: 80%;">
+  <div id="barra-carga" 
+       class="progress-bar progress-bar-animated bg-dark" 
+       role="progressbar" 
+       style="width: 0%">
   </div>
+</div>
+
+
   </div>
-  <div class="abajo">
+
+  <div class="abajo text-center mt-4">
     <h6>Versión 1.0.0 Fabian Salas</h6>
   </div>
 </div>
+
 
 <header style="
   position: fixed;
@@ -114,12 +123,14 @@
          min-width: 160px; 
          z-index: 1050;
        ">
-    <ul style="
+    <ul 
+    
+    style="
       list-style: none; 
       padding: 10px 0; 
       margin: 0;
     ">
-      <li><a href="index.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Inicio</a></li>
+      <li><a class="dropdown-item" href="index.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Inicio</a></li>
       <li><a href="index.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Noticias Nacionales</a></li>
       <li><a href="Internacional.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Noticias Internacionales</a></li>
       <li><a href="deportes.html" style="color: white; text-decoration: none; display: block; padding: 8px 16px;">Futbol y Deporte</a></li>
@@ -134,10 +145,10 @@
 
 
   <!-- Contenedor principal -->
-  <div class="container content-area mt-2">
+  <div class="container content-area mt-2 ">
 
     <!-- Columna izquierda: Clima -->
-    <div class="left-column">
+    <div class="left-column text-center">
       <span class="badge text-bg-success">Clima en Chile</span>
       <p id="fechaHora" class="fs-11 text-center"></p>
       <div id="weather-container" class="scrollable-content">Cargando clima...</div>
@@ -154,13 +165,15 @@
   Actualizar
 </button>
   
-        <span id='nacional'class="badge text-bg-light mb-5">Noticias de Chile</span>
-      <div id="chile-news" class="scrollable-content news-chile">Cargando noticias...</div>
+      <span id='nacional'class="badge text-bg-light mb-5">Noticias de Chile</span>
+      <div id="chile-news" class="scrollable-content news-chile ">Cargando noticias...</div>
       <button class="scroll-button mt-3 btn btn-outline-info" data-target="chile-news">⬇Bajar</button>
-      
-      
-
       <hr class="text-secondary my-3" />
+
+      <div class="text-center">
+        <p>VIVO24® | Version 1.0.0 </p>
+      </div>
+      
 
     </div>
 
@@ -196,7 +209,6 @@
         </div>
 
 
-        <section id="comentarios" class="mt-4">
 
 
 

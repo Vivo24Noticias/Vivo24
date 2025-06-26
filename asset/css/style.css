@@ -725,3 +725,26 @@ button#btnActualizar {
     font-size: 12px;
   }
 
+/* En móviles: invertir el orden */
+@media (max-width: 768px) {
+  .container-flex {
+    flex-direction: column;
+  }
+
+  .left-column {
+    order: 2; /* Lo mueve al final */
+    display: block;
+  }
+
+  .main-content {
+    order: 1;
+  }
+}
+
+
+.sombra-externa {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* sombra por fuera */
+  border: 1px solid #050505;
+  border-radius: 5px;
+  
+}
